@@ -4,6 +4,7 @@ gem "lita"
 gem "lita-slack"
 
 group :development, :test do
-  gem "rspec"
   gem "pry-byebug"
+  gem "rubocop", require: false
+  gem "rspec"
 end

@@ -6,7 +6,7 @@ class SecretsHash < Hash
   class SecretNotFound < StandardError; end
 
   def initialize
-    super { |secrets, key| raise SecretNotFound.new("Secret #{key} not found") }
+    super { |_, key| fail SecretNotFound, "Secret #{key} not found" }
   end
 end
 
