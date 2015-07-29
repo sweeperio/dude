@@ -1,3 +1,5 @@
+ENV["ENV"] = "test"
+
 require "lita/rspec"
 require "pry-byebug"
 require File.expand_path("../../lita_config", __FILE__)

@@ -1,0 +1,12 @@
+common: &common
+  robot:
+    name: dude
+    log_level: :info
+    adapter: :shell
+
+development:
+  <<: *common
+
+test:
+  <<: *common
+  name: test

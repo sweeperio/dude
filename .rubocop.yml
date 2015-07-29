@@ -16,6 +16,9 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
+Style/SingleLineBlockParams:
+  Enabled: false
+
 Metrics/LineLength:
   Max: 120
 
