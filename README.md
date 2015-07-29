@@ -1,4 +1,4 @@
-# Dude
+# Dude [![Build Status](https://travis-ci.org/sweeperio/dude.svg?branch=master)](https://travis-ci.org/sweeperio/dude)
 
 **Dude** is our very own [Lita] bot. It does things with Slack.
 
