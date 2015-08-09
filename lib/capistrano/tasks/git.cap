@@ -5,15 +5,11 @@ namespace :git do
 
   task :wrapper do
     on release_roles :all do
-      command = [
-        "#!/bin/sh -e\nexec /usr/bin/ssh",
-        "-i /home/deploy/.ssh/dude_deploy_key",
-        "-o PasswordAuthentication=no",
-        "\"$@\"\n"
-      ]
+      source = "/home/deploy/.ssh/dude_deploy_key.sh"
+      target = "#{fetch(:tmp_dir)}/#{fetch(:application)}/git-ssh.sh"
 
       execute :mkdir, "-p", "#{fetch(:tmp_dir)}/#{fetch(:application)}/"
-      upload! StringIO.new(command.join(" ")), "#{fetch(:tmp_dir)}/#{fetch(:application)}/git-ssh.sh"
+      execute :cp, source, target
       execute :chmod, "+x", "#{fetch(:tmp_dir)}/#{fetch(:application)}/git-ssh.sh"
     end
   end
