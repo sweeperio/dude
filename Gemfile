@@ -12,3 +12,10 @@ group :development, :test do
   gem "rubocop", require: false
   gem "rspec"
 end
+
+group :deploy do
+  gem "capistrano"
+  gem "capistrano-bundler"
+  gem "capistrano-chruby"
+  gem "capistrano-ejson"
+end

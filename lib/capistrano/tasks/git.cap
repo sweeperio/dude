@@ -1,0 +1,20 @@
+require "capistrano/git"
+
+namespace :git do
+  Rake::Task["wrapper"].clear_actions
+
+  task :wrapper do
+    on release_roles :all do
+      command = [
+        "#!/bin/sh -e\nexec /usr/bin/ssh",
+        "-i /home/deploy/.ssh/dude_deploy_key",
+        "-o PasswordAuthentication=no",
+        "\"$@\"\n"
+      ]
+
+      execute :mkdir, "-p", "#{fetch(:tmp_dir)}/#{fetch(:application)}/"
+      upload! StringIO.new(command.join(" ")), "#{fetch(:tmp_dir)}/#{fetch(:application)}/git-ssh.sh"
+      execute :chmod, "+x", "#{fetch(:tmp_dir)}/#{fetch(:application)}/git-ssh.sh"
+    end
+  end
+end
