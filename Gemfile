@@ -16,6 +16,5 @@ end
 group :deploy do
   gem "capistrano"
   gem "capistrano-bundler"
-  gem "capistrano-chruby"
   gem "capistrano-ejson"
 end
