@@ -4,7 +4,7 @@ gem "activesupport", "~> 4", require: "active_support/all"
 gem "lita"
 gem "lita-slack"
 
-gem "ejson"
+gem "octokit"
 
 group :development, :test do
   gem "pry-byebug"

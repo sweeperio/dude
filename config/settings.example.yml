@@ -1,12 +1,17 @@
 common: &common
-  robot:
-    name: dude
-    log_level: :info
-    adapter: :shell
+  octokit:
+    token: YOUR_GITHUB_TOKEN
+  lita:
+    robot:
+      name: dude
+      log_level: :info
+      adapter: :shell
 
 development:
   <<: *common
 
 test:
   <<: *common
-  name: test
+  lita:
+    robot:
+      name: test
