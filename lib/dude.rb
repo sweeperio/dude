@@ -4,4 +4,4 @@ module Dude
 end
 # rubocop:enable Style/ClassAndModuleChildren
 
-require_relative "dude/handlers/ping"
+Dir[File.expand_path("../dude/handlers/*.rb", __FILE__)].each { |file| require file }
