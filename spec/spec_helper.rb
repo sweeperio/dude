@@ -1,6 +1,7 @@
 ENV["ENV"] = "test"
 
 require "lita/rspec"
+require "webmock/rspec"
 require "pry-byebug"
 require File.expand_path("../../lita_config", __FILE__)
 
@@ -18,4 +19,8 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
+end
+
+def fixture_file(path)
+  IO.binread(File.expand_path("../files/#{path}", __FILE__))
 end

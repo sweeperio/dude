@@ -8,9 +8,13 @@ gem "octokit"
 
 group :development, :test do
   gem "pry-byebug"
-  gem "rack-test"
   gem "rubocop", require: false
+end
+
+group :test do
+  gem "rack-test"
   gem "rspec"
+  gem "webmock"
 end
 
 group :deploy do
