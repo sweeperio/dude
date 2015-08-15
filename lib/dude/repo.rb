@@ -8,6 +8,9 @@ class Dude::Repo
     @branch    = branch
   end
 
+  def deploy
+  end
+
   def https_url
     @https_url ||= "https://github.com/#{OWNER}/#{repo_name}.git"
   end
@@ -21,6 +24,10 @@ class Dude::Repo
       client = Octokit::Client.new(access_token: Settings.get(:octokit, :token))
       client.status("#{OWNER}/#{repo_name}", branch)
     end
+  end
+
+  def sha
+    @sha ||= `git rev-parse --short #{status.sha}`.chomp
   end
 
   def deployable?
