@@ -61,6 +61,8 @@ describe Dude::Handlers::Deploy, lita_handler: true do
       allow_any_instance_of(Dude::Repo).to receive(:deploys).and_return([])
     end
 
+    let(:reply_lines) { replies.map(&:lines).flatten }
+
     it { is_expected.to route_command("list deploys for dude") }
     it { is_expected.to route_command("deploys for dude") }
 
@@ -69,7 +71,14 @@ describe Dude::Handlers::Deploy, lita_handler: true do
 
     it "should list deploys for the specified repo" do
       send_command("deploys for dude")
-      expect(replies).to include("*Latest deploys for sweeperio/dude*\n")
+      expect(reply_lines).to include("*Latest deploys for sweeperio/dude*\n")
+    end
+
+    context "when no deploys exist" do
+      it "should inform the user" do
+        send_command("list deploys for dude")
+        expect(reply_lines).to include("> There are no deploys for sweeperio/dude\n")
+      end
     end
   end
 end
