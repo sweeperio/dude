@@ -1,5 +1,6 @@
 class Dude::Repo
-  OWNER = "sweeperio".freeze
+  OWNER          = "sweeperio".freeze
+  SHORT_SHA_SIZE = 7.freeze
 
   attr_reader :repo_name, :branch, :full_name
   attr_reader :https_url, :ssh_url
@@ -40,7 +41,8 @@ class Dude::Repo
   end
 
   def shorten_sha(sha)
-    `git rev-parse --short #{sha}`.chomp
+    # `git rev-parse --short #{sha}`.chomp
+    sha[0..SHORT_SHA_SIZE - 1]
   end
 
   private
