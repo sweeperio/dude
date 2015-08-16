@@ -36,6 +36,7 @@ class Dude::Handlers::Deploy < Lita::Handler
       at: deploy.created_at.in_time_zone("Eastern Time (US & Canada)"),
       environment: deploy.environment,
       ref: deploy.ref,
+      sha: deploy.sha,
       url: deploy.url,
       user: deploy_user(deploy)
     )

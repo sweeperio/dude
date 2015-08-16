@@ -1,4 +1,4 @@
 *Latest deploys for <%= @repo.full_name %>*
 <% @deploys.each do |deploy| %>
-> <%= deploy.at %> - *<%= deploy.user %>* <<%= deploy.url %>|deployed> <%= @repo.repo_name %>/<%= deploy.ref %> to *<%= deploy.environment %>*
+> <%= deploy.at %> - *<%= deploy.user %>* <<%= deploy.url %>|deployed> <%= @repo.repo_name %>/<%= @repo.full_name %> (<%= "<#{@repo.url_for_sha(deploy.sha)}|#{@repo.shorten_sha(deploy.sha)}>" %>) to *<%= deploy.environment %>*
 <% end %>
