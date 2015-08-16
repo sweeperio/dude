@@ -10,6 +10,10 @@ describe Dude::Handlers::Deploy, lita_handler: true do
   end
 
   context "#deploy" do
+    before do
+      allow_any_instance_of(Octokit::Client).to receive(:create_deployment)
+    end
+
     [
       "deploy dude to staging",
       "deploy dude/master to production",

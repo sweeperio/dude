@@ -15,6 +15,10 @@ describe Dude::Repo do
     expect(Dude::Repo.new(repo_name: "dude").branch).to eq("master")
   end
 
+  it "sets full_name to the full repo name" do
+    expect(subject.full_name).to eq("sweeperio/dude")
+  end
+
   it "sets https_url appropriately" do
     expect(subject.https_url).to eq("https://github.com/sweeperio/dude.git")
   end
@@ -35,6 +39,20 @@ describe Dude::Repo do
     it "is false when the state is not success" do
       expect(subject.status).to receive(:state).and_return("failed")
       expect(subject.deployable?).to_not be true
+    end
+  end
+
+  context "#deploy" do
+    it "creates a deployment on GitHub" do
+      expect_any_instance_of(Octokit::Client).to receive(:create_deployment).with(
+        "sweeperio/dude",
+        "master",
+        auto_merge: false,
+        environment: "production",
+        description: "deploy triggered by dude"
+      )
+
+      subject.deploy
     end
   end
 end

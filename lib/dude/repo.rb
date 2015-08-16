@@ -1,29 +1,29 @@
 class Dude::Repo
   OWNER = "sweeperio".freeze
 
-  attr_reader :repo_name, :branch
+  attr_reader :repo_name, :branch, :full_name
+  attr_reader :https_url, :ssh_url
 
   def initialize(repo_name:, branch: "master")
     @repo_name = repo_name
     @branch    = branch
+    @full_name = "#{OWNER}/#{repo_name}"
+    @https_url = "https://github.com/#{full_name}.git"
+    @ssh_url   = "git@github.com:#{full_name}.git"
   end
 
-  def deploy
-  end
-
-  def https_url
-    @https_url ||= "https://github.com/#{OWNER}/#{repo_name}.git"
-  end
-
-  def ssh_url
-    @ssh_url ||= "git@github.com:#{OWNER}/#{repo_name}.git"
+  def deploy(env: "production")
+    api.create_deployment(
+      full_name,
+      branch,
+      auto_merge: false,
+      environment: env,
+      description: "deploy triggered by dude"
+    )
   end
 
   def status
-    @status ||= begin
-      client = Octokit::Client.new(access_token: Settings.get(:octokit, :token))
-      client.status("#{OWNER}/#{repo_name}", branch)
-    end
+    @status ||= api.status(full_name, branch)
   end
 
   def sha
@@ -32,5 +32,11 @@ class Dude::Repo
 
   def deployable?
     status.state == "success"
+  end
+
+  private
+
+  def api
+    @api ||= Octokit::Client.new(access_token: Settings.get(:octokit, :token))
   end
 end
