@@ -12,12 +12,13 @@ class Dude::Repo
     @ssh_url   = "git@github.com:#{full_name}.git"
   end
 
-  def deploy(env: "production")
+  def deploy(user:, env: "production")
     api.create_deployment(
       full_name,
       branch,
       auto_merge: false,
       environment: env,
+      payload: JSON.generate(deploy_user: user, environment: env),
       description: "deploy triggered by dude"
     )
   end
@@ -28,10 +29,6 @@ class Dude::Repo
 
   def sha
     @sha ||= `git rev-parse --short #{status.sha}`.chomp
-  end
-
-  def deployable?
-    status.state == "success"
   end
 
   private

@@ -31,17 +31,6 @@ describe Dude::Repo do
     expect(subject.status.state).to eq("success")
   end
 
-  context "#deployable?" do
-    it "is true when the state is success" do
-      expect(subject.deployable?).to be true
-    end
-
-    it "is false when the state is not success" do
-      expect(subject.status).to receive(:state).and_return("failed")
-      expect(subject.deployable?).to_not be true
-    end
-  end
-
   context "#deploy" do
     it "creates a deployment on GitHub" do
       expect_any_instance_of(Octokit::Client).to receive(:create_deployment).with(
@@ -49,10 +38,11 @@ describe Dude::Repo do
         "master",
         auto_merge: false,
         environment: "production",
+        payload: JSON.generate(deploy_user: "pseudomuto", environment: "production"),
         description: "deploy triggered by dude"
       )
 
-      subject.deploy
+      subject.deploy(user: "pseudomuto")
     end
   end
 end

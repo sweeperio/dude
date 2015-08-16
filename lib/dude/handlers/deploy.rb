@@ -5,13 +5,10 @@ class Dude::Handlers::Deploy < Lita::Handler
     repo_name, branch, env = extract_repo_branch_and_env(response.matches.first)
     repo = Dude::Repo.new(repo_name: repo_name, branch: branch)
 
-    # unless repo.deployable?
-      # response.reply("Oops! I can't deploy #{repo_name}/#{branch} (#{repo.sha}). CI still running?")
-      # return
-    # end
-
     response.reply("deploying #{repo_name}/#{branch} (#{repo.sha}) to #{env}")
-    repo.deploy
+    repo.deploy(user: response.user.name, env: env)
+  rescue Octokit::Conflict => conflict
+    response.reply(status_error_message(conflict, sha: repo.sha, env: env))
   end
 
   private
@@ -22,6 +19,14 @@ class Dude::Handlers::Deploy < Lita::Handler
     branch ||= "/master"
 
     [repo, branch[1..-1], env]
+  end
+
+  def status_error_message(exception, sha:, env:)
+    states = exception.errors.first.fetch(:contexts).map do |ctx|
+      "> `#{ctx.fetch(:state)}` - *#{ctx.fetch(:context)}*"
+    end
+
+    ["*ERROR DEPLOYING #{sha} to #{env}*", *states].join("\n")
   end
 end
 
