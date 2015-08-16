@@ -23,12 +23,24 @@ class Dude::Repo
     )
   end
 
+  def deploys
+    api.deployments(full_name)
+  end
+
   def status
     @status ||= api.status(full_name, branch)
   end
 
   def sha
-    @sha ||= `git rev-parse --short #{status.sha}`.chomp
+    @sha ||= shorten_sha(status.sha)
+  end
+
+  def url_for_sha(sha)
+    "https://github.com/#{full_name}/tree/#{sha}"
+  end
+
+  def shorten_sha(sha)
+    `git rev-parse --short #{sha}`.chomp
   end
 
   private

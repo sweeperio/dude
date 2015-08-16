@@ -1,0 +1,8 @@
+*Latest deploys for <%= @repo.full_name %>*
+<% @deploys.each do |deploy| %>
+> <%= deploy.at %> - *<%= deploy.user %>* deployed <%= @repo.repo_name %>/<%= @repo.branch %> (`<%= @repo.shorten_sha(deploy.sha) %>`) to *<%= deploy.environment %>*
+<% end %>
+
+<% if @deploys.empty? %>
+> There are no deploys for <%= @repo.full_name %>
+<% end %>

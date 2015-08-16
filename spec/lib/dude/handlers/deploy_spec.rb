@@ -47,12 +47,49 @@ describe Dude::Handlers::Deploy, lita_handler: true do
       expect_any_instance_of(Octokit::Client).to receive(:create_deployment).and_raise(error)
 
       send_command("deploy dude to production")
-      expect(replies).to include("*ERROR DEPLOYING 6dcb09b to production*")
+      expect(replies).to include("*ERROR DEPLOYING 6dcb09b to production*\n")
     end
 
     it "triggers a deploy on the repo" do
       expect_any_instance_of(Dude::Repo).to receive(:deploy)
       send_command("deploy dude to production")
+    end
+  end
+
+  context "#list_deploys" do
+    before do
+      allow_any_instance_of(Dude::Repo).to receive(:deploys).and_return([])
+    end
+
+    let(:reply_lines) { replies.map(&:lines).flatten }
+
+    it { is_expected.to route_command("list deploys for dude") }
+    it { is_expected.to route_command("deploys for dude") }
+
+    it { is_expected.to_not route_command("list deploys for dude/master") }
+    it { is_expected.to_not route_command("deploys for dude/master") }
+
+    it "should list deploys for the specified repo" do
+      send_command("deploys for dude")
+      expect(reply_lines).to include("*Latest deploys for sweeperio/dude*\n")
+    end
+
+    context "when no deploys exist" do
+      it "should inform the user" do
+        send_command("list deploys for dude")
+        expect(reply_lines).to include("> There are no deploys for sweeperio/dude\n")
+      end
+    end
+
+    context "when the repo is not a thing" do
+      before do
+        expect_any_instance_of(Dude::Repo).to receive(:deploys).and_raise(Octokit::NotFound)
+      end
+
+      it "should inform the user" do
+        send_command("list deploys for some_repo")
+        expect(replies).to include("*Repo `sweeperio/some_repo` not found*")
+      end
     end
   end
 end
