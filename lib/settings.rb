@@ -6,7 +6,7 @@ class Settings
       names.inject(settings) { |config, key| config.fetch(key) }
     end
 
-    def configure_lita(config, values: settings)
+    def configure_lita(config, values: settings[:lita])
       values.each do |key, value|
         if value.is_a?(Hash)
           configure_lita(config.public_send(key), values: value)
@@ -28,7 +28,7 @@ class Settings
                    end
 
         settings = (settings[env] || {}).with_indifferent_access
-        settings.deep_merge(Secrets[:lita])
+        settings.deep_merge(Secrets)
       end
     end
 
