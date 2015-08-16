@@ -19,6 +19,8 @@ class Dude::Handlers::Deploy < Lita::Handler
     deploys  = repo.deploys.map { |deploy| deploy_summary(deploy) }
 
     response.reply(render_template("list", repo: repo, deploys: deploys))
+  rescue Octokit::NotFound
+    response.reply("*Repo `#{repo.full_name}` not found*")
   end
 
   private

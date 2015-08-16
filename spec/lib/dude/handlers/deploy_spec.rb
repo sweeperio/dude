@@ -80,5 +80,16 @@ describe Dude::Handlers::Deploy, lita_handler: true do
         expect(reply_lines).to include("> There are no deploys for sweeperio/dude\n")
       end
     end
+
+    context "when the repo is not a thing" do
+      before do
+        expect_any_instance_of(Dude::Repo).to receive(:deploys).and_raise(Octokit::NotFound)
+      end
+
+      it "should inform the user" do
+        send_command("list deploys for some_repo")
+        expect(replies).to include("*Repo `sweeperio/some_repo` not found*")
+      end
+    end
   end
 end
