@@ -1,0 +1,4 @@
+*ERROR DEPLOYING <%= @repo.sha %> to <%= @env %>*
+<% @exception.errors.first.fetch(:contexts).each do |ctx| %>
+> `<%= ctx.fetch(:state) %>` - *<%= ctx.fetch(:context) %>*
+<% end %>

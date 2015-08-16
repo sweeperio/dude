@@ -47,12 +47,29 @@ describe Dude::Handlers::Deploy, lita_handler: true do
       expect_any_instance_of(Octokit::Client).to receive(:create_deployment).and_raise(error)
 
       send_command("deploy dude to production")
-      expect(replies).to include("*ERROR DEPLOYING 6dcb09b to production*")
+      expect(replies).to include("*ERROR DEPLOYING 6dcb09b to production*\n")
     end
 
     it "triggers a deploy on the repo" do
       expect_any_instance_of(Dude::Repo).to receive(:deploy)
       send_command("deploy dude to production")
+    end
+  end
+
+  context "#list_deploys" do
+    before do
+      allow_any_instance_of(Dude::Repo).to receive(:deploys).and_return([])
+    end
+
+    it { is_expected.to route_command("list deploys for dude") }
+    it { is_expected.to route_command("deploys for dude") }
+
+    it { is_expected.to_not route_command("list deploys for dude/master") }
+    it { is_expected.to_not route_command("deploys for dude/master") }
+
+    it "should list deploys for the specified repo" do
+      send_command("deploys for dude")
+      expect(replies).to include("*Latest deploys for sweeperio/dude*\n")
     end
   end
 end

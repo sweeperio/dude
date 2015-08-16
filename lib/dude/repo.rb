@@ -23,6 +23,10 @@ class Dude::Repo
     )
   end
 
+  def deploys
+    api.deployments(full_name)
+  end
+
   def status
     @status ||= api.status(full_name, branch)
   end
