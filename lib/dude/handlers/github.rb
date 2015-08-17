@@ -13,7 +13,7 @@ class Dude::Handlers::Github < Lita::Handler
   private
 
   def announce(message)
-    target = Lita::Source.new(room: "#general")
+    target = Lita::Source.new(room: "general")
     robot.send_message(target, message)
   end
 end
