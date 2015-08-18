@@ -26,7 +26,12 @@ class Dude::Handlers::Deploy < Lita::Handler
   end
 
   def start_deploy(deploy)
-    message = "Started deploy for #{deploy.sha}..."
+    message = [
+      "*#{deploy_user(deploy.deployment)}*",
+      "is deploying *#{deploy.repository.full_name}*",
+      "(`#{deploy.deployment.sha[0..6]}`) to *#{deploy.deployment.environment}*"
+    ].join(" ")
+
     room    = Lita::Room.find_by_name("general")
     target  = Lita::Source.new(room: room)
     robot.send_message(target, message)
