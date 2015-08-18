@@ -4,6 +4,8 @@ class Dude::Handlers::Github < Lita::Handler
   on :github_deploy, :start_deploy
 
   def webhook(request, response)
+    return unless verify_signature(request)
+
     case request.env['HTTP_X_GITHUB_EVENT']
     when "deployment"
       robot.trigger(:github_deploy, "Deployment received")
@@ -20,7 +22,12 @@ class Dude::Handlers::Github < Lita::Handler
 
   private
 
-  def announce(message)
+  def verify_signature(request)
+    request.body.rewind
+    body      = request.body.read
+    secret    = Settings.get(:octokit, :webhook_secret)
+    signature = "sha1=#{OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha1"), secret, body)}"
+    Rack::Utils.secure_compare(signature, request.env["HTTP_X_HUB_SIGNATURE"])
   end
 end
 
