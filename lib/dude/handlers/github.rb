@@ -4,6 +4,7 @@ class Dude::Handlers::Github < Lita::Handler
   def webhook(request, response)
     return unless verify_signature(request)
 
+    request.body.rewind
     payload = JSON.parse(request.body.read)
     payload["event_type"] = request.env['HTTP_X_GITHUB_EVENT']
     payload = Hashie::Mash.new(payload)
