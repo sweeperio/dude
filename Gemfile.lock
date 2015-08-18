@@ -36,6 +36,7 @@ GEM
     faye-websocket (0.10.0)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
+    hashie (3.4.2)
     http_router (0.11.2)
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
@@ -139,6 +140,7 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-ejson
+  hashie
   lita
   lita-slack
   octokit

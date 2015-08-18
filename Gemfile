@@ -5,6 +5,7 @@ gem "lita"
 gem "lita-slack"
 
 gem "octokit"
+gem "hashie"
 
 group :development, :test do
   gem "pry-byebug"

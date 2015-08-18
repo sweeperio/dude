@@ -1,23 +1,19 @@
 class Dude::Handlers::Github < Lita::Handler
   http.post "/github/webhooks", :webhook
 
-  on :github_deploy, :start_deploy
-
   def webhook(request, response)
     return unless verify_signature(request)
 
-    case request.env['HTTP_X_GITHUB_EVENT']
+    payload = JSON.parse(request.body.read)
+    payload["event_type"] = request.env['HTTP_X_GITHUB_EVENT']
+    payload = Hashie::Mash.new(payload)
+
+    case payload.event_type
     when "deployment"
-      robot.trigger(:github_deploy, "Deployment received")
+      robot.trigger(:github_deploy, payload)
     end
 
-    robot.trigger(:github_deploy, "received GH notification")
-  end
-
-  def start_deploy(message)
-    room   = Lita::Room.find_by_name("general")
-    target = Lita::Source.new(room: room)
-    robot.send_message(target, message)
+    robot.trigger(:github_hook, payload)
   end
 
   private

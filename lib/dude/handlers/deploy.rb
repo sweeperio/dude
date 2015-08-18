@@ -4,6 +4,8 @@ class Dude::Handlers::Deploy < Lita::Handler
   route(%r{\Adeploy ([^\s\/]+(\/[^\s\/]+)?) to (staging|production)\z}, :deploy, command: true)
   route(%r{\A(list )?deploys for ([^\s\/]+)\z}, :list_deploys, command: true)
 
+  on :github_deploy, :start_deploy
+
   def deploy(response)
     repo_name, branch, env = extract_repo_branch_and_env(response.matches.first)
     repo = Dude::Repo.new(repo_name: repo_name, branch: branch)
@@ -21,6 +23,13 @@ class Dude::Handlers::Deploy < Lita::Handler
     response.reply(render_template("list", repo: repo, deploys: deploys))
   rescue Octokit::NotFound
     response.reply("*Repo `#{repo.full_name}` not found*")
+  end
+
+  def start_deploy(deploy)
+    message = "Started deploy for #{deploy.sha}..."
+    room    = Lita::Room.find_by_name("general")
+    target  = Lita::Source.new(room: room)
+    robot.send_message(target, message)
   end
 
   private
